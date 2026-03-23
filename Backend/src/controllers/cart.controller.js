@@ -96,3 +96,50 @@ export const addToCartController = async (req, res) => {
     });
   }
 };
+
+export const getCartController = async (req, res) => {
+  try {
+    // 🔐 1. Auth check
+    if (!req.user?.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const userId = req.user.id;
+
+    // 🔍 2. Find user's cart
+    const cart = await cartModel
+      .findOne({ userId })
+      .populate("items.productId", "title price images");
+
+    // 🆕 3. If cart doesn't exist
+    if (!cart) {
+      return res.status(200).json({
+        success: true,
+        message: "Cart is empty",
+        cart: {
+          items: [],
+          totalItems: 0,
+          totalPrice: 0,
+        },
+      });
+    }
+
+    // ✅ 4. Return cart
+    res.status(200).json({
+      success: true,
+      message: "Cart Products fetched successfully",
+      cart,
+    });
+  } catch (error) {
+    console.error("Get Cart error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch cart",
+      error: error.message,
+    });
+  }
+};
