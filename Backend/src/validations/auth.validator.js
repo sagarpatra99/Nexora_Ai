@@ -24,7 +24,7 @@ export const registerDto = z.object({
       },
     ),
 
-  role: z.enum(["user", "admin"]).optional().default("user"),
+  role: z.enum(["admin", "user", "seller"]).optional().default("user"),
 });
 
 export const loginDto = z.object({

@@ -10,7 +10,7 @@ export const productRouter = Router();
 productRouter.post(
   "/create",
   identifyUser,
-  authorizeRoles("admin"),
+  authorizeRoles("seller"),
   validate(postProductDto),
   postProductController,
 );
