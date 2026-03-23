@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 
+// 🔐 user must be logged in
 export const identifyUser = async (req, res, next) => {
   let token = req.cookies.token;
 
