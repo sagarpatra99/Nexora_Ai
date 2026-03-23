@@ -1,30 +1,38 @@
 import mongoose from "mongoose";
+import slugify from "slugify";
 
 const productSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, "Product title is required"],
+      required: true,
       trim: true,
       maxlength: 150,
-      index: true, // 🔥 for search optimization
+      index: true,
+    },
+
+    slug: {
+      type: String,
+      unique: true,
+      index: true,
     },
 
     description: {
       type: String,
-      required: [true, "Product description is required"],
+      required: true,
       maxlength: 2000,
     },
 
     price: {
       type: Number,
-      required: [true, "Price is required"],
+      required: true,
       min: 0,
       index: true,
     },
 
     category: {
       type: String,
+      enum: ["electronics", "fashion", "home", "books"],
       required: true,
       index: true,
     },
@@ -44,87 +52,62 @@ const productSchema = new mongoose.Schema(
 
     images: [
       {
-        url: String,
+        url: {
+          type: String,
+          required: true,
+        },
         altText: String,
       },
     ],
 
     ratings: {
-      average: {
-        type: Number,
-        default: 0,
-        min: 0,
-        max: 5,
-      },
-      count: {
-        type: Number,
-        default: 0,
-      },
+      average: { type: Number, default: 0, min: 0, max: 5 },
+      count: { type: Number, default: 0 },
     },
 
-    tags: [
-      {
-        type: String,
-        lowercase: true,
-      },
-    ],
+    tags: [{ type: String, lowercase: true }],
 
-    // 🔥 AI: price history for prediction
     priceHistory: [
       {
         price: Number,
-        date: {
-          type: Date,
-          default: Date.now,
-        },
+        date: { type: Date, default: Date.now },
       },
     ],
 
-    // 🔥 AI: track user interaction relevance
-    viewCount: {
-      type: Number,
-      default: 0,
-    },
+    viewCount: { type: Number, default: 0 },
+    purchaseCount: { type: Number, default: 0 },
 
-    purchaseCount: {
-      type: Number,
-      default: 0,
-    },
-
-    isFeatured: {
-      type: Boolean,
-      default: false,
-    },
-
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
+    isFeatured: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true }
 );
 
-// 🔍 Text index for search (IMPORTANT)
 productSchema.index({
   title: "text",
   description: "text",
   brand: "text",
 });
 
-// 📉 Track price changes automatically
-productSchema.pre("save", function () {
+productSchema.index({ category: 1, price: 1 });
+
+productSchema.pre("save", function (next) {
+  if (this.isModified("title")) {
+    this.slug = slugify(this.title, { lower: true });
+  }
+
   if (this.isModified("price")) {
     this.priceHistory.push({
       price: this.price,
     });
   }
+
+  next();
 });
 
 const productModel = mongoose.model("Product", productSchema);
