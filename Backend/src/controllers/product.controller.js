@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import productModel from "../models/product.model.js";
 
 export const postProductController = async (req, res) => {
@@ -117,6 +118,50 @@ export const getProductsController = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Get Products failed",
+      error: error.message,
+    });
+  }
+};
+
+export const getSingleProductController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // 🔴 1. Validate MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid product ID",
+      });
+    }
+
+    // 🔥 2. Find product + increment viewCount (atomic operation)
+    const product = await productModel.findOneAndUpdate(
+      { _id: id, isActive: true },
+      { $inc: { viewCount: 1 } },
+      { returnDocument: "after" }, // return updated document
+    );
+
+    // ❌ 3. Product not found
+    if (!product || !product.isActive) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    // ✅ 4. Success response
+    res.status(200).json({
+      success: true,
+      message: "Single Product fetched successfully!",
+      product,
+    });
+  } catch (error) {
+    console.error("Get Single Product error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch product",
       error: error.message,
     });
   }

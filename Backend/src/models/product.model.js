@@ -96,7 +96,7 @@ productSchema.index({
 
 productSchema.index({ category: 1, price: 1 });
 
-productSchema.pre("save", function (next) {
+productSchema.pre("save", function () {
   if (this.isModified("title")) {
     this.slug = slugify(this.title, { lower: true });
   }
@@ -106,8 +106,6 @@ productSchema.pre("save", function (next) {
       price: this.price,
     });
   }
-
-  next();
 });
 
 const productModel = mongoose.model("Product", productSchema);
