@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import productModel from "../models/product.model.js";
+import categoryModel from "../models/category.model.js";
 
 export const postProductController = async (req, res) => {
   try {
@@ -25,19 +26,30 @@ export const postProductController = async (req, res) => {
       // isActive,
     } = req.validatedData;
 
-    const product = await productModel.create({
-      title,
-      description,
-      price,
-      category,
-      brand,
-      stock,
-      images,
-      tags,
-      createdBy, // ✅ important
-      isFeatured: req.validatedData.isFeatured ?? false,
-      isActive: req.validatedData.isActive ?? true,
-    });
+    const categoryExists = await categoryModel.findById(category);
+
+if (!categoryExists) {
+  return res.status(400).json({
+    success: false,
+    message: "Category not found",
+  });
+}
+
+    const product = await productModel
+      .create({
+        title,
+        description,
+        price,
+        category,
+        brand,
+        stock,
+        images,
+        tags,
+        createdBy, // ✅ important
+        isFeatured: req.validatedData.isFeatured ?? false,
+        isActive: req.validatedData.isActive ?? true,
+      })
+      .then((doc) => doc.populate("category", "name slug"));
 
     res.status(201).json({
       success: true,
@@ -99,6 +111,7 @@ export const getProductsController = async (req, res) => {
     // 📦 Fetch products
     const products = await productModel
       .find(query)
+      .populate("category", "name slug")
       .sort(sortOption)
       .skip(skip)
       .limit(Number(limit));
@@ -136,14 +149,16 @@ export const getSingleProductController = async (req, res) => {
     }
 
     // 🔥 2. Find product + increment viewCount (atomic operation)
-    const product = await productModel.findOneAndUpdate(
-      { _id: id, isActive: true },
-      { $inc: { viewCount: 1 } },
-      { returnDocument: "after" }, // return updated document
-    );
+    const product = await productModel
+      .findOneAndUpdate(
+        { _id: id, isActive: true },
+        { $inc: { viewCount: 1 } },
+        { returnDocument: "after" }, // return updated document
+      )
+      .populate("category", "name slug");
 
     // ❌ 3. Product not found
-    if (!product || !product.isActive) {
+    if (!product) {
       return res.status(404).json({
         success: false,
         message: "Product not found",

@@ -104,7 +104,7 @@ export default function Login() {
           <CardFooter className="flex flex-col gap-3 border-0">
             <Button
               type="submit"
-              className="w-full text-white border-0 bg-[linear-gradient(135deg,hsl(230,65%,25%),hsl(262,83%,58%))]"
+              className="w-full text-white flex justify-center border-0 bg-[linear-gradient(135deg,hsl(230,65%,25%),hsl(262,83%,58%))]"
               disabled={loading}
             >
               {loading ? "Signing in..." : "Sign In"}

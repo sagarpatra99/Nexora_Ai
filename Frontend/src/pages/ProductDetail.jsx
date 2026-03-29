@@ -41,22 +41,22 @@ const ProductDetail = () => {
   };
 
   if (loading) return <div>Loading...</div>;
-  if (!product) return <div>Product not found</div>;
+  if (!product) return <div className="h-[80vh] flex items-center justify-center text-6xl">Product not found</div>;
 
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <img src={product.images?.[0]?.url || "/placeholder.jpg"} alt={product.title} className="w-full h-96 object-cover" />
+          <img src={product.images?.[0]?.url || "/placeholder.jpg"} alt={product.title} className="w-full h-96 object-contain" />
         </div>
         <div>
           <h1 className="text-3xl font-bold mb-4">{product.title}</h1>
           <p className="text-gray-600 mb-4">{product.description}</p>
           <p className="text-2xl font-semibold mb-4">${product.price}</p>
-          <p className="mb-4">Category: {product.category}</p>
+          <p className="mb-4">Category: {product.category?.name}</p>
           <p className="mb-4">Brand: {product.brand}</p>
           <p className="mb-4">Stock: {product.stock}</p>
-          <button onClick={handleAddToCart} className="bg-green-500 text-white px-6 py-3 rounded">
+          <button onClick={handleAddToCart} className="bg-green-500 text-white px-6 py-3 rounded cursor-pointer">
             Add to Cart
           </button>
         </div>

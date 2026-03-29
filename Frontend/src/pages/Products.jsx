@@ -180,7 +180,7 @@ export default function Products() {
                     <div className="flex-1">
                       <p className="font-medium text-sm">{product.title}</p>
                       <p className="text-xs text-gray-500">
-                        {product.category}
+                        {product.category?.name}
                       </p>
 
                       <div className="flex gap-2 mt-1">

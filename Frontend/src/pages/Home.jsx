@@ -60,7 +60,7 @@ export default function Home() {
                   Start Shopping <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <Link to="/signup">
+              <Link to="/register">
                 <Button size="lg" variant="outline">
                   Become a Seller
                 </Button>
@@ -129,7 +129,7 @@ export default function Home() {
           <p className="text-white/80 mb-6 max-w-md mx-auto text-center">
             Join thousands of sellers on Nexora.ai and reach millions of customers with AI-powered tools.
           </p>
-          <Link to="/signup">
+          <Link to="/register">
             <Button size="lg" variant="secondary" className="gap-2">
               Create Seller Account <ArrowRight className="h-4 w-4" />
             </Button>

@@ -11,8 +11,9 @@ export const createCategoryController = async (req, res) => {
       });
     }
 
-    // ❌ Check duplicate
-    const existing = await categoryModel.findOne({ name });
+    const normalizedName = name.toLowerCase();
+
+    const existing = await categoryModel.findOne({ name: normalizedName });
 
     if (existing) {
       return res.status(400).json({
@@ -22,8 +23,7 @@ export const createCategoryController = async (req, res) => {
     }
 
     const category = await categoryModel.create({
-      name,
-      slug: slugify(name, { lower: true }),
+      name: normalizedName,
     });
 
     res.status(201).json({
