@@ -25,7 +25,7 @@ export default function Products() {
       try {
         const res = await axios.get("http://localhost:3000/api/categories   ");
         setCategories(res.data.categories || []);
-        console.log(res.data);
+        // console.log(res.data);
       } catch (err) {
         console.error(err);
       }
@@ -102,21 +102,26 @@ export default function Products() {
           </select>
 
           {/* View Toggle */}
-          <div className="flex gap-1">
+          <div className="flex gap-5">
             <Button
               variant={view === "grid" ? "default" : "outline"}
               size="icon"
               onClick={() => setView("grid")}
             >
-              <Grid3X3 className="h-4 w-4" />
+              <div className="rounded-md p-2 bg-[linear-gradient(135deg,hsl(230,65%,25%),hsl(262,83%,58%))]">
+                <Grid3X3 className="h-5 w-5 text-white" />
+              </div>
             </Button>
 
             <Button
               variant={view === "list" ? "default" : "outline"}
               size="icon"
               onClick={() => setView("list")}
+              className={"flex items-center justify-center"}
             >
-              <List className="h-4 w-4" />
+              <div className="">
+                <List className="h-5 w-5" />
+              </div>
             </Button>
           </div>
         </div>
@@ -166,7 +171,7 @@ export default function Products() {
                       }`}
                     >
                       <img
-                        src={product.images?.[0]}
+                        src={product.images?.[0]?.url}
                         alt={product.title}
                         className="w-full h-full object-cover"
                       />
@@ -175,7 +180,7 @@ export default function Products() {
                     <div className="flex-1">
                       <p className="font-medium text-sm">{product.title}</p>
                       <p className="text-xs text-gray-500">
-                        {product.category?.name}
+                        {product.category}
                       </p>
 
                       <div className="flex gap-2 mt-1">

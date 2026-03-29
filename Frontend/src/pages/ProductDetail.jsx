@@ -47,7 +47,7 @@ const ProductDetail = () => {
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <img src={product.image || "/placeholder.jpg"} alt={product.title} className="w-full h-96 object-cover" />
+          <img src={product.images?.[0]?.url || "/placeholder.jpg"} alt={product.title} className="w-full h-96 object-cover" />
         </div>
         <div>
           <h1 className="text-3xl font-bold mb-4">{product.title}</h1>

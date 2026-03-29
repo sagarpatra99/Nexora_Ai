@@ -31,8 +31,8 @@ const productSchema = new mongoose.Schema(
     },
 
     category: {
-      type: String,
-      enum: ["electronics", "fashion", "home", "books"],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
       required: true,
       index: true,
     },
@@ -85,7 +85,7 @@ const productSchema = new mongoose.Schema(
       ref: "User",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 productSchema.index({
