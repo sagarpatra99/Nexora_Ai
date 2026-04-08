@@ -49,7 +49,13 @@ export const AuthProvider = ({ children }) => {
     setUser(user);
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await authAPI.logout();
+    } catch (error) {
+      console.log("Logout API error:", error);
+    }
+
     localStorage.removeItem("token");
     delete api.defaults.headers.common["Authorization"];
     setUser(null);

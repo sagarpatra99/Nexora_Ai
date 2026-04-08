@@ -23,10 +23,15 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Logo } from "./common/Logo";
 
 export const Navbar = () => {
-  const { user, role, profile, signOut } = useAuth();
+  const { user, logout } = useAuth();
+  const role = user?.role;
+  const profile = user;
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   console.log(profile);
-  
 
   const navLinks = [
     { label: "Home", to: "/" },
@@ -89,7 +94,7 @@ export const Navbar = () => {
                 <DropdownMenuContent align="end" className="w-48">
                   <div className="px-2 py-1.5">
                     <p className="text-sm font-medium">
-                      {profile?.full_name || "User"}
+                      {profile?.name || "User"}
                     </p>
                     <p className="text-xs text-muted-foreground capitalize">
                       {role}
@@ -111,8 +116,8 @@ export const Navbar = () => {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={signOut}
-                    className="text-destructive"
+                    onClick={handleLogout}
+                    className="text-destructive cursor-pointer"
                   >
                     <LogOut className="h-4 w-4 mr-2" /> Sign Out
                   </DropdownMenuItem>
@@ -122,7 +127,11 @@ export const Navbar = () => {
           ) : (
             <div className="flex items-center gap-2">
               <Link to="/login">
-                <Button variant="ghost" size="sm" className="border-0 transition-all duration-300 px-2.5 py-1.5 hover:text-white hover:bg-purple-600">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="border-0 transition-all duration-300 px-2.5 py-1.5 hover:text-white hover:bg-purple-600"
+                >
                   Sign In
                 </Button>
               </Link>

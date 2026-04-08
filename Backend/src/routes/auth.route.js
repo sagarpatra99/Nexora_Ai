@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getMeController,
   loginController,
+  logoutController,
   registerController,
 } from "../controllers/auth.controller.js";
 import { validate } from "../middlewares/validate.middleware.js";
@@ -13,3 +14,4 @@ export const authRouter = Router();
 authRouter.post("/register", validate(registerDto), registerController);
 authRouter.post("/login", validate(loginDto), loginController);
 authRouter.get("/get-me", identifyUser, getMeController);
+authRouter.post("/logout", logoutController);
