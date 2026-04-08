@@ -7,7 +7,6 @@ import {
   Search,
   LogOut,
   LayoutDashboard,
-  Package,
 } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -30,8 +29,6 @@ export const Navbar = () => {
   const handleLogout = async () => {
     await logout();
   };
-
-  console.log(profile);
 
   const navLinks = [
     { label: "Home", to: "/" },

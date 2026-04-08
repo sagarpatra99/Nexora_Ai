@@ -14,10 +14,11 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Logo } from "@/components/common/Logo";
-import { authAPI } from "@/app/api";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -31,16 +32,9 @@ export default function Login() {
     }
     setLoading(true);
     try {
-      const response = await authAPI.login({ email, password });
-      
-      if (response.data.success) {
-        toast.success("Welcome back!");
-        // Store token if needed
-        if (response.data.token) {
-          localStorage.setItem("token", response.data.token);
-        }
-        navigate("/");
-      }
+      await login({ email, password });
+      toast.success("Welcome back!");
+      navigate("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
     } finally {
@@ -61,7 +55,9 @@ export default function Login() {
           {/* Logo */}
           <Logo />
           <CardTitle className="text-xl">Welcome Back</CardTitle>
-          <CardDescription className="text-gray-600">Sign in to your account to continue</CardDescription>
+          <CardDescription className="text-gray-600">
+            Sign in to your account to continue
+          </CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
           <CardContent className="space-y-4">
@@ -119,7 +115,10 @@ export default function Login() {
             </Button>
             <p className="text-sm text-muted-foreground text-center">
               Don't have an account?{" "}
-              <Link to="/register" className="font-medium text-[#7C3BED] hover:underline">
+              <Link
+                to="/register"
+                className="font-medium text-[#7C3BED] hover:underline"
+              >
                 Sign Up
               </Link>
             </p>
