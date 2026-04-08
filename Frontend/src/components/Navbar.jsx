@@ -25,6 +25,9 @@ import { Logo } from "./common/Logo";
 export const Navbar = () => {
   const { user, role, profile, signOut } = useAuth();
 
+  console.log(profile);
+  
+
   const navLinks = [
     { label: "Home", to: "/" },
     { label: "Products", to: "/products" },
@@ -77,8 +80,8 @@ export const Navbar = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
                     <Avatar className="h-8 w-8">
-                      <AvatarFallback className="nexora-gradient text-white text-xs">
-                        {profile?.full_name?.charAt(0)?.toUpperCase() || "U"}
+                      <AvatarFallback className="nexora-gradient text-xs font-semibold">
+                        {profile?.name?.charAt(0)?.toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                   </Button>

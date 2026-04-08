@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Logo } from "@/components/common/Logo";
+import { authAPI } from "@/app/api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -29,14 +30,21 @@ export default function Login() {
       return;
     }
     setLoading(true);
-    const { error } =
-      "await supabase.auth.signInWithPassword({ email, password })";
-    setLoading(false);
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Welcome back!");
-      navigate("/");
+    try {
+      const response = await authAPI.login({ email, password });
+      
+      if (response.data.success) {
+        toast.success("Welcome back!");
+        // Store token if needed
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token);
+        }
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
